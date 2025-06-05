@@ -73,43 +73,60 @@ function App() {
   };
 
   return (
-    <div id="chat">
-      {!connected ? (
-        <form onSubmit={e => { e.preventDefault(); handleConnect(); }}>
-          <input
-            placeholder="Enter username"
-            value={username}
-            onChange={e => setUsername(e.target.value)}
-            required
-          />
-          <button type="submit">Connect</button>
-        </form>
-      ) : (
-        <>
-          <div style={{ maxHeight: 400, overflowY: 'auto', border: '1px solid #eee', marginBottom: 8 }}>
-            {messages.map((msg, i) => (
-              <div key={i} className="message">
-                <b>{msg.sender}:</b> {msg.text}
-              </div>
-            ))}
-            {Object.keys(typingUsers).map(user => (
-              <div key={user} className="typing">{user} is typing...</div>
-            ))}
+    <div className="chat-app-bg">
+      <div className="chat-container">
+        <header className="chat-header">
+          <div className="chat-title">
+            <span role="img" aria-label="chat">💬</span> Signal Chat
           </div>
-          <form onSubmit={handleSend}>
-            <input
-              ref={inputRef}
-              value={input}
-              onChange={e => setInput(e.target.value)}
-              onKeyDown={handleTyping}
-              placeholder="Type a message"
-              autoFocus
-              required
-            />
-            <button type="submit">Send</button>
-          </form>
-        </>
-      )}
+          {connected && <div className="chat-username">You: {username}</div>}
+        </header>
+        <main className="chat-main">
+          {!connected ? (
+            <form className="chat-login-form" onSubmit={e => { e.preventDefault(); handleConnect(); }}>
+              <input
+                className="chat-input"
+                placeholder="Enter username"
+                value={username}
+                onChange={e => setUsername(e.target.value)}
+                required
+                autoFocus
+              />
+              <button className="chat-btn" type="submit">Connect</button>
+            </form>
+          ) : (
+            <>
+              <div className="chat-messages" id="chat-messages">
+                {messages.map((msg, i) => (
+                  <div
+                    key={i}
+                    className={`chat-message-bubble ${msg.sender === username ? 'self' : 'other'}`}
+                  >
+                    <span className="chat-message-sender">{msg.sender}</span>
+                    <span className="chat-message-text">{msg.text}</span>
+                  </div>
+                ))}
+                {Object.keys(typingUsers).map(user => (
+                  <div key={user} className="chat-typing">{user} is typing...</div>
+                ))}
+              </div>
+              <form className="chat-input-form" onSubmit={handleSend}>
+                <input
+                  className="chat-input"
+                  ref={inputRef}
+                  value={input}
+                  onChange={e => setInput(e.target.value)}
+                  onKeyDown={handleTyping}
+                  placeholder="Type a message"
+                  autoFocus
+                  required
+                />
+                <button className="chat-btn" type="submit">Send</button>
+              </form>
+            </>
+          )}
+        </main>
+      </div>
     </div>
   );
 }
