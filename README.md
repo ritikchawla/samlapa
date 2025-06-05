@@ -2,9 +2,10 @@
 
 ## Features
 - Real-time chat with WebSocket (Golang backend)
-- End-to-end encryption using Signal protocol (browser JS)
+- Encrypted messaging using AES (crypto-js) in React frontend
 - User registration, login, presence, and user listing (REST API)
 - Redis Pub/Sub for scalable presence and message delivery
+- Modern React frontend (Vite)
 
 ## Project Structure
 ```
@@ -12,7 +13,13 @@
 ├── client/
 │   ├── index.html
 │   ├── signal.js
-│   └── signal-chat.js
+│   ├── signal-chat.js
+│   └── react-app/
+│       ├── src/
+│       │   ├── App.jsx
+│       │   ├── signal.js
+│       │   └── signal-chat.js
+│       └── ...
 └── server/
     ├── main.go
     ├── go.mod
@@ -35,8 +42,15 @@
    go run main.go
    ```
 
-3. **Open the frontend**  
-   Visit [http://localhost:8080](http://localhost:8080) in your browser.
+3. **Start the React frontend**
+   ```
+   cd client/react-app
+   npm install
+   npm run dev
+   ```
+   Visit [http://localhost:5173](http://localhost:5173) in your browser.
+
+   > The backend and frontend must both be running for full functionality.
 
 ## API Endpoints
 

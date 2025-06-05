@@ -1,0 +1,22 @@
+# Node.js
+client/react-app/node_modules/
+client/react-app/dist/
+client/node_modules/
+client/dist/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Go
+server/bin/
+server/.env
+server/.DS_Store
+
+# Editor
+.vscode/
+.idea/
+*.swp

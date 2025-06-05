@@ -76,7 +76,39 @@ func newHub(rdb *redis.Client) *Hub {
 }
 
 func (h *Hub) run() {
-	// Placeholder for pubsub logic
+	pubsub := h.redis.Subscribe(h.ctx, redisTopic)
+	defer pubsub.Close()
+	ch := pubsub.Channel()
+
+	for {
+		select {
+		case client := <-h.register:
+			h.mu.Lock()
+			h.clients[client] = true
+			h.mu.Unlock()
+		case client := <-h.unregister:
+			h.mu.Lock()
+			if _, ok := h.clients[client]; ok {
+				delete(h.clients, client)
+				close(client.send)
+			}
+			h.mu.Unlock()
+		case msg := <-ch:
+			var env Envelope
+			if err := json.Unmarshal([]byte(msg.Payload), &env); err == nil {
+				h.mu.Lock()
+				for client := range h.clients {
+					select {
+					case client.send <- env:
+					default:
+						close(client.send)
+						delete(h.clients, client)
+					}
+				}
+				h.mu.Unlock()
+			}
+		}
+	}
 }
 
 // --- REST API Handlers ---
